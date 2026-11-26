@@ -1,0 +1,16 @@
+# Copy this file into .github/workflows/ of EACH project repo.
+# Needs a secret PROFILE_TOKEN (fine-grained token, Actions: Read and write on your profile repo).
+name: Refresh profile
+on:
+  push:
+  repository_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: >
+          curl -sS -X POST
+          -H "Authorization: Bearer ${{ secrets.PROFILE_TOKEN }}"
+          -H "Accept: application/vnd.github+json"
+          https://api.github.com/repos/${{ github.repository_owner }}/${{ github.repository_owner }}/actions/workflows/update-profile.yml/dispatches
+          -d '{"ref":"main"}'
